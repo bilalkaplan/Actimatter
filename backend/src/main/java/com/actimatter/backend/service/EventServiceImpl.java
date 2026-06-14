@@ -3,6 +3,7 @@ package com.actimatter.backend.service;
 import com.actimatter.backend.model.Event;
 import com.actimatter.backend.model.User;
 import com.actimatter.backend.repository.EventRepository;
+import com.actimatter.backend.repository.RegistrationRepository;
 import com.actimatter.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,8 +42,16 @@ public class EventServiceImpl implements EventService {
         return eventRepository.save(event);
     }
 
+    @Autowired
+    private RegistrationRepository registrationRepository;
+
     @Override
+    @org.springframework.transaction.annotation.Transactional
     public void deleteEvent(Long eventId) {
+        // Explicitly delete registrations first to prevent Referential Integrity Constraint Violation
+        java.util.List<com.actimatter.backend.model.Registration> regs = registrationRepository.findByEventId(eventId);
+        registrationRepository.deleteAll(regs);
+        
         eventRepository.deleteById(eventId);
     }
 
