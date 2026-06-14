@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { AuthContext } from '../context/AuthContext';
 
 const Register = () => {
@@ -9,7 +10,6 @@ const Register = () => {
     password: '',
     role: 'PARTICIPANT'
   });
-  const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   
   const { register, login } = useContext(AuthContext);
@@ -24,12 +24,13 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
     setIsLoading(true);
+    const loadToast = toast.loading('Hesap oluşturuluyor...');
 
     const regResult = await register(formData);
     
     if (regResult.success) {
+      toast.success('Kayıt başarılı! Giriş yapılıyor...', { id: loadToast });
       // Kayıt başarılıysa otomatik giriş yapıp dashboard'a yönlendir
       const loginResult = await login(formData.username, formData.password);
       if (loginResult.success) {
@@ -38,7 +39,7 @@ const Register = () => {
         navigate('/login');
       }
     } else {
-      setError(regResult.message);
+      toast.error(regResult.message, { id: loadToast });
     }
     
     setIsLoading(false);
@@ -51,12 +52,6 @@ const Register = () => {
           <h2 className="text-3xl font-extrabold text-white mb-2">Hesap Oluştur</h2>
           <p className="text-blue-200">ACTIMATTER dünyasına katılın</p>
         </div>
-
-        {error && (
-          <div className="bg-red-500/20 border border-red-500/50 text-red-100 px-4 py-3 rounded-lg mb-6 text-sm text-center">
-            {error}
-          </div>
-        )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>

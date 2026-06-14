@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/events")
 public class EventController {
@@ -24,6 +25,13 @@ public class EventController {
     @GetMapping
     public ResponseEntity<List<Event>> getAllEvents() {
         return ResponseEntity.ok(eventService.getAllEvents());
+    }
+
+    // Koordinatörün kendi etkinlikleri
+    @GetMapping("/my")
+    @PreAuthorize("hasRole('COORDINATOR')")
+    public ResponseEntity<List<Event>> getMyEvents(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.ok(eventService.getMyEvents(userDetails.getId()));
     }
 
     // Herkese Açık (Public) Endpoint

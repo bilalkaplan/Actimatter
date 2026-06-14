@@ -43,4 +43,11 @@ public interface EventService {
      * @return A list of all events.
      */
     List<Event> getAllEvents();
+
+    /**
+     * Retrieves all events for a specific coordinator.
+     * @param coordinatorId The ID of the coordinator.
+     * @return A list of events.
+     */
+    List<Event> getMyEvents(Long coordinatorId);
 }

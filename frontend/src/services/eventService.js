@@ -5,6 +5,10 @@ const eventService = {
     const response = await api.get('/events');
     return response.data;
   },
+  getMyEvents: async () => {
+    const response = await api.get('/events/my');
+    return response.data;
+  },
   getEventById: async (id) => {
     const response = await api.get(`/events/${id}`);
     return response.data;

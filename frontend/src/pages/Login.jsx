@@ -1,11 +1,11 @@
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { AuthContext } from '../context/AuthContext';
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   
   const { login } = useContext(AuthContext);
@@ -13,15 +13,16 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
     setIsLoading(true);
+    const loadToast = toast.loading('Giriş yapılıyor...');
 
     const result = await login(username, password);
     
     if (result.success) {
+      toast.success('Giriş başarılı!', { id: loadToast });
       navigate('/dashboard');
     } else {
-      setError(result.message);
+      toast.error(result.message, { id: loadToast });
     }
     
     setIsLoading(false);
@@ -34,12 +35,6 @@ const Login = () => {
           <h2 className="text-3xl font-extrabold text-white mb-2">Hoş Geldiniz</h2>
           <p className="text-blue-200">ACTIMATTER hesabınıza giriş yapın</p>
         </div>
-
-        {error && (
-          <div className="bg-red-500/20 border border-red-500/50 text-red-100 px-4 py-3 rounded-lg mb-6 text-sm text-center">
-            {error}
-          </div>
-        )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>

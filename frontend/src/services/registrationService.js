@@ -8,6 +8,14 @@ const registrationService = {
   updateRegistrationStatus: async (registrationId, status) => {
     const response = await api.put(`/registrations/${registrationId}/status`, { status });
     return response.data;
+  },
+  getMyRegistrations: async () => {
+    const response = await api.get('/registrations/my');
+    return response.data;
+  },
+  getRegistrationsByEventId: async (eventId) => {
+    const response = await api.get(`/registrations/event/${eventId}/list`);
+    return response.data;
   }
 };
 

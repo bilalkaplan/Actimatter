@@ -24,4 +24,18 @@ public interface RegistrationService {
      * @return The updated registration instance.
      */
     Registration updateRegistrationStatus(Long registrationId, RegistrationStatus newStatus);
+
+    /**
+     * Gets all registrations for a specific user.
+     * @param userId The ID of the user.
+     * @return List of registrations.
+     */
+    java.util.List<Registration> getMyRegistrations(Long userId);
+
+    /**
+     * Gets all registrations for a specific event.
+     * @param eventId The ID of the event.
+     * @return List of registrations.
+     */
+    java.util.List<Registration> getRegistrationsByEventId(Long eventId);
 }

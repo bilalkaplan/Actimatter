@@ -12,4 +12,5 @@ public interface RegistrationRepository extends JpaRepository<Registration, Long
     long countByEventIdAndStatus(Long eventId, RegistrationStatus status);
     List<Registration> findByEventId(Long eventId);
     List<Registration> findByUserId(Long userId);
+    boolean existsByEventIdAndUserId(Long eventId, Long userId);
 }

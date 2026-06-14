@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/registrations")
 public class RegistrationController {
@@ -27,6 +28,28 @@ public class RegistrationController {
         try {
             Registration registration = registrationService.registerToEvent(eventId, userDetails.getId());
             return ResponseEntity.status(HttpStatus.CREATED).body(registration);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @GetMapping("/my")
+    @PreAuthorize("hasRole('PARTICIPANT')")
+    public ResponseEntity<?> getMyRegistrations(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        try {
+            java.util.List<Registration> registrations = registrationService.getMyRegistrations(userDetails.getId());
+            return ResponseEntity.ok(registrations);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @GetMapping("/event/{eventId}/list")
+    @PreAuthorize("hasRole('COORDINATOR') or hasRole('ADMIN')")
+    public ResponseEntity<?> getEventRegistrations(@PathVariable Long eventId) {
+        try {
+            java.util.List<Registration> registrations = registrationService.getRegistrationsByEventId(eventId);
+            return ResponseEntity.ok(registrations);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
         }

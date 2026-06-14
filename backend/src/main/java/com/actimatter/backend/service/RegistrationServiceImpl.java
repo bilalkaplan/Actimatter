@@ -41,6 +41,10 @@ public class RegistrationServiceImpl implements RegistrationService {
             }
         }
 
+        if (registrationRepository.existsByEventIdAndUserId(eventId, userId)) {
+            throw new RuntimeException("Zaten bu etkinliğe başvurdunuz!");
+        }
+
         Registration registration = new Registration();
         registration.setEvent(event);
         registration.setUser(user);
@@ -63,5 +67,15 @@ public class RegistrationServiceImpl implements RegistrationService {
 
         registration.setStatus(newStatus);
         return registrationRepository.save(registration);
+    }
+
+    @Override
+    public java.util.List<Registration> getMyRegistrations(Long userId) {
+        return registrationRepository.findByUserId(userId);
+    }
+
+    @Override
+    public java.util.List<Registration> getRegistrationsByEventId(Long eventId) {
+        return registrationRepository.findByEventId(eventId);
     }
 }
